@@ -1,0 +1,112 @@
+﻿/* Base Reset */
+* {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* Main Application Card */
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    max-width: 650px;
+    width: 100%;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 0;
+    color: #111;
+}
+
+/* The Mad Libs Paragraph */
+.mad-libs-text {
+    font-size: 1.25rem;
+    line-height: 2.2;
+    text-align: left;
+    margin-bottom: 40px;
+}
+
+/* Dropdown Styling */
+select {
+    font-size: 1.1rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 2px solid #ddd;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    color: #0056b3;
+    font-weight: bold;
+    transition: border-color 0.2s;
+}
+
+    select:focus {
+        border-color: #0056b3;
+        outline: none;
+    }
+
+/* The Call to Action */
+button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+    button:hover {
+        background-color: #004494;
+    }
+
+    button:active {
+        transform: scale(0.98);
+    }
+
+/* Results Section */
+.hidden {
+    display: none;
+}
+
+#result-container {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #e9ecef;
+    animation: fadeIn 0.5s ease-in;
+}
+
+#result-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0056b3;
+    margin: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

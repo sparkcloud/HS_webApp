@@ -1,11 +1,44 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathway Predictor MVP</title>
+    <link rel="stylesheet" href="src/styles/style.css">
 </head>
 <body>
+    <main class="container">
+        <h1>Discover Your Pathway</h1>
 
+        <p class="mad-libs-text">
+            When I have free time, I most enjoy
+            <select id="q1">
+                <option value="tech">building things</option>
+                <option value="health">helping others</option>
+                <option value="arts">creating art</option>
+            </select>.
+            If I had to solve a problem, I would rather
+            <select id="q2">
+                <option value="tech">use logic and code</option>
+                <option value="health">talk it out with people</option>
+                <option value="arts">brainstorm wild ideas</option>
+            </select>.
+            I feel most successful when I
+            <select id="q3">
+                <option value="tech">make something work</option>
+                <option value="health">make someone smile</option>
+                <option value="arts">express myself fully</option>
+            </select>.
+        </p>
+
+        <button id="predict-btn">Find My Path</button>
+
+        <div id="result-container" class="hidden">
+            <h2>Your Best Match:</h2>
+            <p id="result-text"></p>
+        </div>
+    </main>
+
+    <script src="src/util/app.js"></script>
 </body>
 </html>
