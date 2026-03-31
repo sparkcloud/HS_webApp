@@ -1,4 +1,4 @@
-# HS_webApp
+# Pursuit L1 (Week 3) - High School Pathway Predictor
 
 ## Problem statement
  Young adults entering high school often face uncertainty about their future and a lack of personalized guidance. 
