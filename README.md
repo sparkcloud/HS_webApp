@@ -19,16 +19,16 @@
  with a directed, personalized career plan and the educational resources they need to confidently step into adulthood. 
 
  ## Tools
-Mininmum Viable Product (MVP):
+**Mininmum Viable Product (MVP):**
 
 - A form for users to input their 200-word free time description.
 - A section to display the generated "Personality Badge" and predicted pathway.
 - Social sharing buttons for platforms like Instagram, Twitter, and Facebook.
 
 **Front end:**
-	- Vanilla javascript, HTML, and CSS for a simple, responsive user interface.
+- Vanilla javascript, HTML, and CSS for a simple, responsive user interface.
 **Back end:**
-	- Supabase for user authentication and database management.
+- Supabase for user authentication and database management.
 
 ## App solution concept
 
@@ -46,17 +46,17 @@ The badge displays the predicted "Pathway."
 
 ## Future vision
 
-Future iteration:
-	- looking into TDD for site (research Jest and Playwright)
-	- possible expansion into react for frontend
-	- Possible inclusion of Node.js backend from scratch, configuring an Angular workspace and TypeScript
+### Future iteration:
+- looking into TDD for site (research Jest and Playwright)
+- possible expansion into react for frontend
+- Possible inclusion of Node.js backend from scratch, configuring an Angular workspace and TypeScript
 
-Other Considerations:
-	- Holland Occupational Themes model to provide an instant academic/career starting point.
-	- O*NET Interest Profiler Short Form (30 questions) and attempt to Integrates the O*NET Web Service API 
-	- inclusion of final RIASEC scores (Realistic, Investigative, Artistic, Social, Enterprising, Conventional)
-	- research "Holland Code Score," "Big Five O*NET Result," "BigFuture Career Quiz Top 3"
-	- My Next Move & The O*NET Interest Profiler
-	- CareerOneStop: GetMyFuture
-	- BigFuture
-	- 16 Career Clusters Framework
+### Other Considerations:
+- Holland Occupational Themes model to provide an instant academic/career starting point.
+- O*NET Interest Profiler Short Form (30 questions) and attempt to Integrates the O*NET Web Service API 
+- inclusion of final RIASEC scores (Realistic, Investigative, Artistic, Social, Enterprising, Conventional)
+- research "Holland Code Score," "Big Five O*NET Result," "BigFuture Career Quiz Top 3"
+- My Next Move & The O*NET Interest Profiler
+- CareerOneStop: GetMyFuture
+- BigFuture
+- 16 Career Clusters Framework
