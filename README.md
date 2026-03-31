@@ -6,9 +6,9 @@
  This can result in missed opportunities for personal growth and development, as well as a lack of confidence in their ability to 
  navigate the transition into adulthood.
 
-- Basic question to be resolved
-	**What tools exist to help a person entering high school match to the kind of studies and career that interests them most in an 
-	AI empowered environment?**
+- Basic question to be resolved:
+	*What tools exist to help a person entering high school match to the kind of studies and career that interests them most in an 
+	AI empowered environment?*
 
 ## Value proposition
 
@@ -19,20 +19,20 @@
  with a directed, personalized career plan and the educational resources they need to confidently step into adulthood. 
 
  ## Tools
-	- Mininmum Viable Product (MVP):
+Mininmum Viable Product (MVP):
 
-		- A form for users to input their 200-word free time description.
-		- A section to display the generated "Personality Badge" and predicted pathway.
-		- Social sharing buttons for platforms like Instagram, Twitter, and Facebook.
+- A form for users to input their 200-word free time description.
+- A section to display the generated "Personality Badge" and predicted pathway.
+- Social sharing buttons for platforms like Instagram, Twitter, and Facebook.
 
-		*Front end:*
-			- Vanilla javascript, HTML, and CSS for a simple, responsive user interface.
-		*Back end:*
-			- Supabase for user authentication and database management.
+**Front end:**
+	- Vanilla javascript, HTML, and CSS for a simple, responsive user interface.
+**Back end:**
+	- Supabase for user authentication and database management.
 
 ## App solution concept
 
-*The 200-Word Personality "Pathway" Predictor*
+**The 200-Word Personality "Pathway" Predictor**
 - Problem Statement Wrap: Uses advanced Natural Language Processing (NLP) to predict study paths from standard student self-descriptions.
 Narrow Scope: The user provides only one thing: a 200-word paragraph describing what they do in their free time.
 - AI Empowerment: Uses the free tier of the Sentino Personality API (which uses GPT-powered NLP). 
@@ -46,12 +46,12 @@ The badge displays the predicted "Pathway."
 
 ## Future vision
 
-	Future iteration:
-		- looking into TDD for site (research Jest and Playwright)
-		- possible expansion into react for frontend
-		- Possible inclusion of Node.js backend from scratch, configuring an Angular workspace and TypeScript
+Future iteration:
+	- looking into TDD for site (research Jest and Playwright)
+	- possible expansion into react for frontend
+	- Possible inclusion of Node.js backend from scratch, configuring an Angular workspace and TypeScript
 
-	Other Considerations:
+Other Considerations:
 	- Holland Occupational Themes model to provide an instant academic/career starting point.
 	- O*NET Interest Profiler Short Form (30 questions) and attempt to Integrates the O*NET Web Service API 
 	- inclusion of final RIASEC scores (Realistic, Investigative, Artistic, Social, Enterprising, Conventional)
