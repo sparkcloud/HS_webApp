@@ -1,9 +1,7 @@
-// Prevent script from executing multiple times (fixes hot-reload issues)
 if (window.__appInitialized) {
     console.log("App already initialized, skipping...");
 } else {
     window.__appInitialized = true;
-
     console.log("app.js loaded!");
 
     // Initialize Supabase
@@ -11,14 +9,61 @@ if (window.__appInitialized) {
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heGhkd29yZ2Flc3hqbWJjcXFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMDAyMzIsImV4cCI6MjA5MDU3NjIzMn0.CPfuGjP6Jw0NLwSDz_69TaKeSQSA6ZFCA9azYIYYP7s';
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    // --- AUTHENTICATION DOM ELEMENTS ---
+    // --- DOM ELEMENTS ---
     const authContainer = document.getElementById('auth-container');
     const appContainer = document.getElementById('app-container');
+    const profileContainer = document.getElementById('profile-container');
+    const mainNav = document.getElementById('main-nav');
+
     const emailInput = document.getElementById('email-input');
     const passwordInput = document.getElementById('password-input');
     const signupBtn = document.getElementById('signup-btn');
     const loginBtn = document.getElementById('login-btn');
     const authMessage = document.getElementById('auth-message');
+
+    // Navigation Buttons
+    const navCareerBtn = document.getElementById('nav-career-btn');
+    const navProfileBtn = document.getElementById('nav-profile-btn');
+    const navLogoutBtn = document.getElementById('nav-logout-btn');
+
+    // --- ROUTING / VIEW LOGIC ---
+    function showView(viewName) {
+        // Hide all main containers first
+        authContainer.classList.add('hidden');
+        appContainer.classList.add('hidden');
+        profileContainer.classList.add('hidden');
+
+        // Show the requested container
+        if (viewName === 'auth') {
+            authContainer.classList.remove('hidden');
+            mainNav.classList.add('hidden'); // Hide nav on login screen
+        } else if (viewName === 'career') {
+            appContainer.classList.remove('hidden');
+            mainNav.classList.remove('hidden'); // Show nav
+        } else if (viewName === 'profile') {
+            profileContainer.classList.remove('hidden');
+            mainNav.classList.remove('hidden'); // Show nav
+        }
+    }
+
+    // --- NAVIGATION LISTENERS ---
+    navCareerBtn.addEventListener('click', () => showView('career'));
+    navProfileBtn.addEventListener('click', () => showView('profile'));
+
+    navLogoutBtn.addEventListener('click', async () => {
+        // Tell Supabase to destroy the secure session
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            console.error("Error logging out:", error.message);
+        } else {
+            console.log("Logged out successfully.");
+            // Reset the UI
+            document.getElementById('result-container').classList.add('hidden');
+            authMessage.textContent = "";
+            showView('auth');
+        }
+    });
 
     // --- SIGN UP LOGIC ---
     signupBtn.addEventListener('click', async () => {
@@ -35,7 +80,6 @@ if (window.__appInitialized) {
             authMessage.style.color = 'red';
             authMessage.textContent = error.message;
         } else {
-            // Create a corresponding profile row for the new user
             try {
                 const { error: profileError } = await supabase.from('profiles').insert({
                     id: data.user.id
@@ -74,34 +118,25 @@ if (window.__appInitialized) {
         } else {
             console.log("Login successful! User data:", data.user);
 
-            // Hide the auth screen and show the main app
-            authContainer.classList.add('hidden');
-            appContainer.classList.remove('hidden');
-
-            // Clear the inputs
+            // Clear inputs and route to the career tool
             emailInput.value = '';
             passwordInput.value = '';
+            authMessage.textContent = '';
+            showView('career');
         }
     });
 
+    // --- PATHWAY PREDICTOR LOGIC ---
     document.getElementById('predict-btn').addEventListener('click', async () => {
-        // 1. Gather the selected values from the three dropdowns
         const val1 = document.getElementById('q1').value;
         const val2 = document.getElementById('q2').value;
         const val3 = document.getElementById('q3').value;
-
         const choices = [val1, val2, val3];
 
-        // 2. Count the frequency of each chosen pathway
         const counts = {};
-        choices.forEach(choice => {
-            counts[choice] = (counts[choice] || 0) + 1;
-        });
+        choices.forEach(choice => { counts[choice] = (counts[choice] || 0) + 1; });
 
-        // 3. Determine the winning pathway
         let highestCount = 0;
-        // We default to the first choice. If they pick 3 different options (a tie),
-        // the system naturally prioritizes what they do in their "free time" (val1).
         let winningPathway = choices[0];
 
         for (const path in counts) {
@@ -111,33 +146,23 @@ if (window.__appInitialized) {
             }
         }
 
-        // 4. Map the internal backend value to a human-readable display string
         const pathwaysMap = {
             'tech': 'Technology & Engineering 💻',
             'health': 'Health & Human Services 🤝',
             'arts': 'Creative Arts & Humanities 🎨'
         };
 
-        // 5. Update the UI to reveal the final result
         const resultText = document.getElementById('result-text');
         const resultContainer = document.getElementById('result-container');
 
         resultText.textContent = pathwaysMap[winningPathway];
-
-        // Remove the 'hidden' CSS class to show the box with a fade-in animation
         resultContainer.classList.remove('hidden');
 
-        // 6. Save the result to Supabase for the current user
         try {
             const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-            if (userError) {
-                console.error('Error getting user:', userError.message);
-                return;
-            }
-
-            if (!user) {
-                console.error('No user logged in');
+            if (userError || !user) {
+                console.error('User auth error:', userError?.message);
                 return;
             }
 
@@ -147,10 +172,9 @@ if (window.__appInitialized) {
             );
 
             if (error) {
-                console.error('Error saving prediction to database:', error.message);
-                console.error('Error details:', error);
+                console.error('Error saving prediction:', error.message);
             } else {
-                console.log('Prediction saved successfully for profile:', user.id, 'Pathway:', winningPathway);
+                console.log('Prediction saved:', winningPathway);
             }
         } catch (err) {
             console.error('Unexpected error:', err.message);

@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="src/styles/style.css">
 </head>
 <body>
+
+    <nav id="main-nav" class="hidden">
+        <button id="nav-career-btn">Career Tool</button>
+        <button id="nav-profile-btn">User Profile</button>
+        <button id="nav-logout-btn" style="color: #ff6b6b;">Log Out</button>
+    </nav>
+
     <main id="auth-container" class="container">
         <h1>Welcome!</h1>
         <p>Please log in or sign up to save your pathways.</p>
@@ -53,6 +60,13 @@
             <p id="result-text"></p>
         </div>
     </main>
+
+    <main id="profile-container" class="container hidden">
+        <h1>User Profile</h1>
+        <p>Welcome to your dashboard. Your past results will appear here.</p>
+        <div id="history-list"></div>
+    </main>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="src/util/app.js"></script>
 </body>
