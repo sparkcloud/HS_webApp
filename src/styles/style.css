@@ -153,3 +153,46 @@ nav {
 .hidden {
     display: none !important;
 }
+
+/* Updated User Profile History Cards */
+#history-list {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.history-card {
+    background-color: #f8f9fa;
+    border-left: 5px solid #0056b3;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    /* New Flexbox layout to align the checkbox and text */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Make the checkbox a bit larger and easier to tap on mobile */
+.delete-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.history-content {
+    flex-grow: 1; /* Pushes the text to take up remaining space */
+}
+
+.history-date {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.history-result {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}

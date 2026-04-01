@@ -26,6 +26,9 @@ if (window.__appInitialized) {
     const navProfileBtn = document.getElementById('nav-profile-btn');
     const navLogoutBtn = document.getElementById('nav-logout-btn');
 
+    // --- DOM ELEMENTS
+    const deleteSelectedBtn = document.getElementById('delete-selected-btn');
+
     // --- ROUTING / VIEW LOGIC ---
     function showView(viewName) {
         // Hide all main containers first
@@ -46,9 +49,103 @@ if (window.__appInitialized) {
         }
     }
 
+    // --- FETCH USER HISTORY LOGIC ---
+    async function loadUserProfile() {
+        const historyList = document.getElementById('history-list');
+        historyList.innerHTML = '<p>Loading your past results...</p>';
+        deleteSelectedBtn.classList.add('hidden'); // Hide delete button while loading
+
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            historyList.innerHTML = '<p>Please log in to view your history.</p>';
+            return;
+        }
+
+        // 1. IMPORTANT: We added 'id' to the select query so we know exactly which row to delete
+        const { data, error } = await supabase
+            .from('predictions')
+            .select('id, pathway_result, created_at')
+            .eq('profile_id', user.id)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error("Error fetching history:", error.message);
+            historyList.innerHTML = '<p style="color: red;">Failed to load history.</p>';
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            historyList.innerHTML = '<p>You have no saved pathways yet. Go to the Career Tool to get started!</p>';
+            return;
+        }
+
+        // 2. Data exists, so show the delete button
+        deleteSelectedBtn.classList.remove('hidden');
+        historyList.innerHTML = '';
+
+        data.forEach(item => {
+            // 3. Changed to toLocaleString() to show both Date AND Exact Time
+            const formattedDateTime = new Date(item.created_at).toLocaleString(undefined, {
+                dateStyle: 'medium',
+                timeStyle: 'short'
+            });
+
+            // 4. Injected the checkbox, storing the database row 'id' inside the value attribute
+            const cardHTML = `
+                <div class="history-card" id="card-${item.id}">
+                    <input type="checkbox" class="delete-checkbox" value="${item.id}">
+                    <div class="history-content">
+                        <div class="history-date">Saved on: ${formattedDateTime}</div>
+                        <p class="history-result">${item.pathway_result}</p>
+                    </div>
+                </div>
+            `;
+
+            historyList.innerHTML += cardHTML;
+        });
+    }
+
+    // --- DELETE SELECTED LOGIC ---
+    deleteSelectedBtn.addEventListener('click', async () => {
+        // Find every checkbox on the screen that is currently "checked"
+        const checkedBoxes = document.querySelectorAll('.delete-checkbox:checked');
+
+        if (checkedBoxes.length === 0) {
+            alert('Please check the box next to the entries you want to delete.');
+            return;
+        }
+
+        // Confirm before deleting (always good practice for destructive actions)
+        if (!confirm(`Are you sure you want to delete ${checkedBoxes.length} saved result(s)?`)) {
+            return;
+        }
+
+        // Extract the database IDs from the checked boxes into an array
+        const idsToDelete = Array.from(checkedBoxes).map(box => box.value);
+
+        // Tell Supabase to delete where the row ID is IN our array of selected IDs
+        const { error } = await supabase
+            .from('predictions')
+            .delete()
+            .in('id', idsToDelete);
+
+        if (error) {
+            console.error("Error deleting entries:", error.message);
+            alert("There was a problem deleting your entries. Please try again.");
+        } else {
+            console.log("Successfully deleted entries.");
+            // Reload the profile screen to instantly reflect the deleted items
+            loadUserProfile();
+        }
+    });
+
     // --- NAVIGATION LISTENERS ---
     navCareerBtn.addEventListener('click', () => showView('career'));
-    navProfileBtn.addEventListener('click', () => showView('profile'));
+    navProfileBtn.addEventListener('click', () => {
+        loadUserProfile(); // Fetch the data
+        showView('profile'); // Show the screen
+    });
 
     navLogoutBtn.addEventListener('click', async () => {
         // Tell Supabase to destroy the secure session
