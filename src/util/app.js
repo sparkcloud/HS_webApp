@@ -37,9 +37,6 @@ if (window.__appInitialized) {
         appContainer.classList.add('hidden');
         profileContainer.classList.add('hidden');
 
-        // Close the mobile nav when switching views
-        mainNav.classList.remove('open');
-
         // Show the requested container
         if (viewName === 'auth') {
             authContainer.classList.remove('hidden');
@@ -48,13 +45,13 @@ if (window.__appInitialized) {
         } else if (viewName === 'career') {
             appContainer.classList.remove('hidden');
             mainNav.classList.remove('hidden'); // Show nav
-            mainNav.classList.remove('collapsed'); // Ensure nav is not collapsed
-            navToggleBtn.classList.remove('hidden'); // Show hamburger on mobile
+            mainNav.classList.remove('collapsed'); // Start expanded (not collapsed)
+            navToggleBtn.classList.remove('hidden'); // Show hamburger
         } else if (viewName === 'profile') {
             profileContainer.classList.remove('hidden');
             mainNav.classList.remove('hidden'); // Show nav
-            mainNav.classList.remove('collapsed'); // Ensure nav is not collapsed
-            navToggleBtn.classList.remove('hidden'); // Show hamburger on mobile
+            mainNav.classList.remove('collapsed'); // Start expanded (not collapsed)
+            navToggleBtn.classList.remove('hidden'); // Show hamburger
         }
     }
 
@@ -64,11 +61,14 @@ if (window.__appInitialized) {
         mainNav.classList.toggle('open');
     });
 
-    // Close nav when clicking a nav button
+    // Close nav when clicking a nav button (only on mobile)
     [navCareerBtn, navProfileBtn, navLogoutBtn].forEach(btn => {
         btn.addEventListener('click', () => {
-            mainNav.classList.add('collapsed');
-            mainNav.classList.remove('open');
+            // Only collapse on mobile (window width <= 768px)
+            if (window.innerWidth <= 768) {
+                mainNav.classList.add('collapsed');
+                mainNav.classList.remove('open');
+            }
         });
     });
 

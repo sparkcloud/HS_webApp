@@ -141,6 +141,7 @@ nav {
 
 /* Collapsed state for nav on desktop */
 nav.collapsed {
+    display: none;
     max-height: 0;
     padding: 0;
     margin: 0;
@@ -158,8 +159,9 @@ nav button {
     font-weight: bold;
     border-radius: 6px;
     transition: background-color 0.2s;
-    width: 100%;
+    width: auto;
     text-align: center;
+    white-space: nowrap;
 }
 
 nav button:hover {
@@ -205,23 +207,25 @@ nav button[style*="color: #ff6b6b"]:hover {
         justify-content: flex-start;
         padding: 80px 15px 20px 15px;
         border-radius: 0;
-        margin-bottom: 0;
         margin: 0;
         transition: left 0.3s ease-in-out;
         z-index: 999;
         overflow-y: auto;
-        max-height: 100vh;
-        opacity: 1;
+        background-color: #333;
+        display: flex;
     }
 
+    /* When nav has 'open' class, slide it in */
     nav.open {
         left: 0;
     }
 
+    /* Collapsed state on mobile - just slide it off screen */
     nav.collapsed {
         left: -250px;
-        max-height: 100vh;
+        display: flex;
         opacity: 1;
+        max-height: 100vh;
         padding: 80px 15px 20px 15px;
     }
 
@@ -267,19 +271,24 @@ nav button[style*="color: #ff6b6b"]:hover {
     }
 
     nav {
-        position: static;
-        flex-direction: row;
+        position: sticky;
+        top: 0;
+        flex-direction: column;
         width: auto;
         height: auto;
-        justify-content: center;
+        justify-content: flex-start;
         padding: 15px;
         left: auto;
         margin-bottom: 20px;
-        max-height: 500px;
+        max-height: none;
         opacity: 1;
+        border-radius: 8px;
+        z-index: 100;
+        gap: 10px;
     }
 
     nav.collapsed {
+        display: none;
         max-height: 0;
         padding: 0;
         margin: 0;
@@ -289,6 +298,7 @@ nav button[style*="color: #ff6b6b"]:hover {
     nav button {
         width: auto;
         text-align: center;
+        padding: 12px 20px;
     }
 }
 /* Hidden utility class */
