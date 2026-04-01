@@ -57,8 +57,13 @@ if (window.__appInitialized) {
 
     // --- HAMBURGER MENU TOGGLE ---
     navToggleBtn.addEventListener('click', () => {
-        mainNav.classList.toggle('collapsed');
-        mainNav.classList.toggle('open');
+        // On mobile: toggle 'open' class to show/hide menu
+        // On desktop: toggle 'collapsed' class to collapse/expand menu
+        if (window.innerWidth <= 768) {
+            mainNav.classList.toggle('open');
+        } else {
+            mainNav.classList.toggle('collapsed');
+        }
     });
 
     // Close nav when clicking a nav button (only on mobile)
@@ -66,7 +71,6 @@ if (window.__appInitialized) {
         btn.addEventListener('click', () => {
             // Only collapse on mobile (window width <= 768px)
             if (window.innerWidth <= 768) {
-                mainNav.classList.add('collapsed');
                 mainNav.classList.remove('open');
             }
         });

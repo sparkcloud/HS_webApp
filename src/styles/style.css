@@ -215,9 +215,9 @@ nav button[style*="color: #ff6b6b"]:hover {
         display: flex;
     }
 
-    /* When nav has 'open' class, slide it in */
+    /* When nav has 'open' class, slide it in - use !important to override collapsed */
     nav.open {
-        left: 0;
+        left: 0 !important;
     }
 
     /* Collapsed state on mobile - just slide it off screen */
