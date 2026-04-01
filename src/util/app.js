@@ -48,22 +48,26 @@ if (window.__appInitialized) {
         } else if (viewName === 'career') {
             appContainer.classList.remove('hidden');
             mainNav.classList.remove('hidden'); // Show nav
+            mainNav.classList.remove('collapsed'); // Ensure nav is not collapsed
             navToggleBtn.classList.remove('hidden'); // Show hamburger on mobile
         } else if (viewName === 'profile') {
             profileContainer.classList.remove('hidden');
             mainNav.classList.remove('hidden'); // Show nav
+            mainNav.classList.remove('collapsed'); // Ensure nav is not collapsed
             navToggleBtn.classList.remove('hidden'); // Show hamburger on mobile
         }
     }
 
     // --- HAMBURGER MENU TOGGLE ---
     navToggleBtn.addEventListener('click', () => {
+        mainNav.classList.toggle('collapsed');
         mainNav.classList.toggle('open');
     });
 
     // Close nav when clicking a nav button
     [navCareerBtn, navProfileBtn, navLogoutBtn].forEach(btn => {
         btn.addEventListener('click', () => {
+            mainNav.classList.add('collapsed');
             mainNav.classList.remove('open');
         });
     });
