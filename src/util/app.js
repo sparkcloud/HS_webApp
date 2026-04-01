@@ -85,19 +85,38 @@ if (window.__appInitialized) {
         historyList.innerHTML = '';
 
         data.forEach(item => {
-            // 3. Changed to toLocaleString() to show both Date AND Exact Time
             const formattedDateTime = new Date(item.created_at).toLocaleString(undefined, {
-                dateStyle: 'medium',
-                timeStyle: 'short'
+                dateStyle: 'medium', timeStyle: 'short'
             });
 
-            // 4. Injected the checkbox, storing the database row 'id' inside the value attribute
+            // 1. RE-GENERATE THE IMAGE ON THE FLY
+            const imageUrl = createCardDataUrl(item.pathway_result);
+
+            // 2. PREPARE SHARE TEXT
+            const appUrl = encodeURIComponent(window.location.origin + window.location.pathname);
+            const shareText = encodeURIComponent(`I matched with the ${item.pathway_result}! Find your path: `);
+
+            // 3. INJECT THE IMAGE AND BUTTONS
+            // We use 'data-' attributes to store the info the buttons need when clicked
             const cardHTML = `
                 <div class="history-card" id="card-${item.id}">
-                    <input type="checkbox" class="delete-checkbox" value="${item.id}">
-                    <div class="history-content">
-                        <div class="history-date">Saved on: ${formattedDateTime}</div>
-                        <p class="history-result">${item.pathway_result}</p>
+                    <div style="display: flex; justify-content: space-between; width: 100%;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" class="delete-checkbox" value="${item.id}">
+                            <div>
+                                <div class="history-date">Saved on: ${formattedDateTime}</div>
+                                <p class="history-result">${item.pathway_result}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <img src="${imageUrl}" alt="Result Card" style="width: 100%; max-width: 400px; border-radius: 8px; margin-top: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    
+                    <div class="profile-share-actions" style="display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap;">
+                        <button class="prof-btn prof-dl" data-img="${imageUrl}" style="background: #28a745; font-size: 0.8rem; padding: 5px 10px;">💾 Download</button>
+                        <button class="prof-btn prof-x" data-text="${shareText}" data-url="${appUrl}" style="background: #000; font-size: 0.8rem; padding: 5px 10px;">X</button>
+                        <button class="prof-btn prof-in" data-url="${appUrl}" style="background: #0077b5; font-size: 0.8rem; padding: 5px 10px;">LinkedIn</button>
+                        <button class="prof-btn prof-copy" data-text="${shareText}" data-url="${appUrl}" style="background: #6c757d; font-size: 0.8rem; padding: 5px 10px;">📋 Copy Link</button>
                     </div>
                 </div>
             `;
@@ -105,6 +124,41 @@ if (window.__appInitialized) {
             historyList.innerHTML += cardHTML;
         });
     }
+
+// --- PROFILE SHARING EVENT LISTENER ---
+document.getElementById('history-list').addEventListener('click', async (e) => {
+    const target = e.target;
+
+    // If they didn't click a profile share button, ignore it
+    if (!target.classList.contains('prof-btn')) return;
+
+    // Grab the data we hid inside the HTML attributes
+    const imgData = target.getAttribute('data-img');
+    const text = target.getAttribute('data-text');
+    const url = target.getAttribute('data-url');
+
+    if (target.classList.contains('prof-dl')) {
+        const link = document.createElement('a');
+        link.download = 'Past_Pathway_Card.png';
+        link.href = imgData;
+        link.click();
+    }
+    else if (target.classList.contains('prof-x')) {
+        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+    }
+    else if (target.classList.contains('prof-in')) {
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+    else if (target.classList.contains('prof-copy')) {
+        try {
+            const plainText = decodeURIComponent(text) + decodeURIComponent(url);
+            await navigator.clipboard.writeText(plainText);
+            alert("Text copied! Ready to paste into Slack or Discord.");
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+        }
+    }
+});
 
     // --- DELETE SELECTED LOGIC ---
     deleteSelectedBtn.addEventListener('click', async () => {
@@ -223,6 +277,82 @@ if (window.__appInitialized) {
         }
     });
 
+    // --- PURE CANVAS GENERATOR ---
+    function createCardDataUrl(pathwayName) {
+        // Create a canvas element directly in memory (doesn't need to be in the HTML)
+        const canvas = document.createElement('canvas');
+        canvas.width = 600;
+        canvas.height = 400;
+        const ctx = canvas.getContext('2d');
+
+        // Draw Background
+        const gradient = ctx.createLinearGradient(0, 0, 600, 400);
+        gradient.addColorStop(0, '#0056b3');
+        gradient.addColorStop(1, '#00d2ff');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw Decorative Shapes
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.beginPath(); ctx.arc(100, 100, 150, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(500, 350, 200, 0, Math.PI * 2); ctx.fill();
+
+        // Draw Text
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 24px sans-serif';
+        ctx.fillText('My Recommended High School Pathway is:', canvas.width / 2, 150);
+        ctx.font = 'bold 40px sans-serif';
+        ctx.fillText(pathwayName, canvas.width / 2, 220);
+        ctx.font = '20px sans-serif';
+        ctx.fillText('Discover your path at Pathway Predictor!', canvas.width / 2, 350);
+
+        // Return the final image URL
+        return canvas.toDataURL('image/png');
+    }
+
+    // --- SETUP SHARING LISTENERS ---
+    function setupSharing(pathwayName, imageDataUrl) {
+        // We will use your GitHub Pages URL here once deployed. 
+        // For now, we use a placeholder or window.location.href.
+        const appUrl = encodeURIComponent(window.location.href);
+        const shareText = encodeURIComponent(`I just matched with the ${pathwayName} on Pathway Predictor! Find your path: `);
+
+        // Download Image (For Insta/TikTok)
+        document.getElementById('download-btn').onclick = () => {
+            const link = document.createElement('a');
+            link.download = 'My_Pathway_Card.png';
+            link.href = imageDataUrl;
+            link.click();
+        };
+
+        // X (Twitter)
+        document.getElementById('share-x-btn').onclick = () => {
+            window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${appUrl}`, '_blank');
+        };
+
+        // LinkedIn
+        document.getElementById('share-linkedin-btn').onclick = () => {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${appUrl}`, '_blank');
+        };
+
+        // Email
+        document.getElementById('share-email-btn').onclick = () => {
+            window.location.href = `mailto:?subject=My Pathway Result&body=${shareText} ${appUrl}`;
+        };
+
+        // Copy to Clipboard (Discord/Slack)
+        document.getElementById('copy-link-btn').onclick = async () => {
+            try {
+                const plainText = decodeURIComponent(shareText) + window.location.href;
+                await navigator.clipboard.writeText(plainText);
+                alert("Text copied to clipboard! Paste it in Discord or Slack.");
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+        };
+    }
+
     // --- PATHWAY PREDICTOR LOGIC ---
     document.getElementById('predict-btn').addEventListener('click', async () => {
         const val1 = document.getElementById('q1').value;
@@ -253,6 +383,14 @@ if (window.__appInitialized) {
         const resultContainer = document.getElementById('result-container');
 
         resultText.textContent = pathwaysMap[winningPathway];
+
+        // Generate the image and get the data URL back
+        const generatedImageUrl = createCardDataUrl(pathwaysMap[winningPathway]);
+        document.getElementById('share-image').src = generatedImageUrl;
+
+        // Wire up the buttons with the new data
+        setupSharing(pathwaysMap[winningPathway], generatedImageUrl);
+
         resultContainer.classList.remove('hidden');
 
         try {

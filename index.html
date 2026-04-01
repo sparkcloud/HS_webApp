@@ -57,7 +57,23 @@
 
         <div id="result-container" class="hidden">
             <h2>Your Best Match:</h2>
-            <p id="result-text"></p>
+            <p id="result-text" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 20px;"></p>
+
+            <canvas id="share-canvas" width="600" height="400" style="display: none;"></canvas>
+
+            <img id="share-image" alt="Your Pathway Card" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
+
+            <div class="share-actions" style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="download-btn" style="background-color: #28a745;">💾 Download Card for Instagram/TikTok</button>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+                    <button id="share-x-btn" style="background-color: #000; flex: 1;">X (Twitter)</button>
+                    <button id="share-linkedin-btn" style="background-color: #0077b5; flex: 1;">LinkedIn</button>
+                    <button id="share-email-btn" style="background-color: #17a2b8; flex: 1;">Email</button>
+                </div>
+
+                <button id="copy-link-btn" style="background-color: #6c757d; margin-top: 10px;">📋 Copy Text for Discord/Slack</button>
+            </div>
         </div>
     </main>
 
