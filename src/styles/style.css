@@ -134,6 +134,9 @@ nav {
     text-align: center;
     margin-bottom: 20px;
     border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
     nav button {
@@ -149,6 +152,75 @@ nav {
         nav button:hover {
             text-decoration: underline;
         }
+
+/* Hamburger Menu Button (Mobile Only) */
+.nav-toggle-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    width: auto;
+}
+
+.nav-toggle-btn:hover {
+    background-color: #555;
+}
+
+/* Mobile Responsive Navigation */
+@media (max-width: 768px) {
+    nav {
+        position: fixed;
+        left: -250px;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 80px;
+        border-radius: 0;
+        margin-bottom: 0;
+        transition: left 0.3s ease-in-out;
+        z-index: 999;
+    }
+
+    nav.open {
+        left: 0;
+    }
+
+    .nav-toggle-btn {
+        display: block !important;
+    }
+
+    body {
+        padding: 80px 20px 20px 20px;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 769px) {
+    .nav-toggle-btn {
+        display: none !important;
+    }
+
+    nav {
+        position: static;
+        flex-direction: row;
+        width: auto;
+        height: auto;
+        justify-content: center;
+        padding: 15px;
+    }
+}
 /* Hidden utility class */
 .hidden {
     display: none !important;
@@ -167,10 +239,18 @@ nav {
     margin-bottom: 15px;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    /* New Flexbox layout to align the checkbox and text */
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 15px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.history-card > div {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 /* Make the checkbox a bit larger and easier to tap on mobile */
@@ -178,10 +258,14 @@ nav {
     width: 20px;
     height: 20px;
     cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
 .history-content {
-    flex-grow: 1; /* Pushes the text to take up remaining space */
+    flex-grow: 1;
+    min-width: 0;
+    word-break: break-word;
 }
 
 .history-date {
@@ -195,4 +279,49 @@ nav {
     font-weight: bold;
     color: #333;
     margin: 0;
+    word-wrap: break-word;
+}
+
+.profile-share-actions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.prof-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.prof-btn:hover {
+    opacity: 0.8;
+}
+
+/* Mobile responsive for history cards */
+@media (max-width: 768px) {
+    .history-card {
+        padding: 12px;
+    }
+
+    .history-card img {
+        max-width: 100% !important;
+        width: 100%;
+    }
+
+    .profile-share-actions {
+        gap: 8px;
+    }
+
+    .prof-btn {
+        flex: 1;
+        min-width: 70px;
+    }
 }

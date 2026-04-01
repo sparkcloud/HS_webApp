@@ -14,6 +14,7 @@ if (window.__appInitialized) {
     const appContainer = document.getElementById('app-container');
     const profileContainer = document.getElementById('profile-container');
     const mainNav = document.getElementById('main-nav');
+    const navToggleBtn = document.getElementById('nav-toggle-btn');
 
     const emailInput = document.getElementById('email-input');
     const passwordInput = document.getElementById('password-input');
@@ -36,18 +37,36 @@ if (window.__appInitialized) {
         appContainer.classList.add('hidden');
         profileContainer.classList.add('hidden');
 
+        // Close the mobile nav when switching views
+        mainNav.classList.remove('open');
+
         // Show the requested container
         if (viewName === 'auth') {
             authContainer.classList.remove('hidden');
             mainNav.classList.add('hidden'); // Hide nav on login screen
+            navToggleBtn.classList.add('hidden'); // Hide hamburger on login screen
         } else if (viewName === 'career') {
             appContainer.classList.remove('hidden');
             mainNav.classList.remove('hidden'); // Show nav
+            navToggleBtn.classList.remove('hidden'); // Show hamburger on mobile
         } else if (viewName === 'profile') {
             profileContainer.classList.remove('hidden');
             mainNav.classList.remove('hidden'); // Show nav
+            navToggleBtn.classList.remove('hidden'); // Show hamburger on mobile
         }
     }
+
+    // --- HAMBURGER MENU TOGGLE ---
+    navToggleBtn.addEventListener('click', () => {
+        mainNav.classList.toggle('open');
+    });
+
+    // Close nav when clicking a nav button
+    [navCareerBtn, navProfileBtn, navLogoutBtn].forEach(btn => {
+        btn.addEventListener('click', () => {
+            mainNav.classList.remove('open');
+        });
+    });
 
     // --- FETCH USER HISTORY LOGIC ---
     async function loadUserProfile() {
