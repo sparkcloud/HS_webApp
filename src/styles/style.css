@@ -110,3 +110,19 @@ button {
         transform: translateY(0);
     }
 }
+
+/* Authentication Inputs */
+input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    transition: border-color 0.2s;
+}
+
+    input[type="email"]:focus, input[type="password"]:focus {
+        border-color: #0056b3;
+        outline: none;
+    }

@@ -1,3 +1,63 @@
+const supabaseUrl = 'https://maxhdworgaesxjmbcqqc.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heGhkd29yZ2Flc3hqbWJjcXFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMDAyMzIsImV4cCI6MjA5MDU3NjIzMn0.CPfuGjP6Jw0NLwSDz_69TaKeSQSA6ZFCA9azYIYYP7s';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// --- AUTHENTICATION DOM ELEMENTS ---
+const authContainer = document.getElementById('auth-container');
+const appContainer = document.getElementById('app-container');
+const emailInput = document.getElementById('email-input');
+const passwordInput = document.getElementById('password-input');
+const signupBtn = document.getElementById('signup-btn');
+const loginBtn = document.getElementById('login-btn');
+const authMessage = document.getElementById('auth-message');
+
+// --- SIGN UP LOGIC ---
+signupBtn.addEventListener('click', async () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    authMessage.textContent = "Loading...";
+
+    const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+    });
+
+    if (error) {
+        authMessage.style.color = 'red';
+        authMessage.textContent = error.message;
+    } else {
+        authMessage.style.color = 'green';
+        authMessage.textContent = "Success! You can now Log In.";
+    }
+});
+
+// --- LOG IN LOGIC ---
+loginBtn.addEventListener('click', async () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    authMessage.textContent = "Loading...";
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+    });
+
+    if (error) {
+        authMessage.style.color = 'red';
+        authMessage.textContent = error.message;
+    } else {
+        console.log("Login successful! User data:", data.user);
+
+        // Hide the auth screen and show the main app
+        authContainer.classList.add('hidden');
+        appContainer.classList.remove('hidden');
+
+        // Clear the inputs
+        emailInput.value = '';
+        passwordInput.value = '';
+    }
+});
+
 document.getElementById('predict-btn').addEventListener('click', () => {
     // 1. Gather the selected values from the three dropdowns
     const val1 = document.getElementById('q1').value;

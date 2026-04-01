@@ -7,7 +7,22 @@
     <link rel="stylesheet" href="src/styles/style.css">
 </head>
 <body>
-    <main class="container">
+    <main id="auth-container" class="container">
+        <h1>Welcome!</h1>
+        <p>Please log in or sign up to save your pathways.</p>
+
+        <input type="email" id="email-input" placeholder="Email address" required>
+        <input type="password" id="password-input" placeholder="Password" required>
+
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button id="login-btn">Log In</button>
+            <button id="signup-btn" style="background-color: #6c757d;">Sign Up</button>
+        </div>
+
+        <p id="auth-message" style="color: red; font-weight: bold; margin-top: 15px;"></p>
+    </main>
+
+    <main id="app-container" class="container hidden">
         <h1>Discover Your Pathway</h1>
 
         <p class="mad-libs-text">
@@ -38,7 +53,7 @@
             <p id="result-text"></p>
         </div>
     </main>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="src/util/app.js"></script>
 </body>
 </html>
