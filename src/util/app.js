@@ -9,6 +9,25 @@ if (window.__appInitialized) {
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heGhkd29yZ2Flc3hqbWJjcXFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMDAyMzIsImV4cCI6MjA5MDU3NjIzMn0.CPfuGjP6Jw0NLwSDz_69TaKeSQSA6ZFCA9azYIYYP7s';
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
+    // --- PATHWAY COLOR CONFIGURATION ---
+    const pathwayColors = {
+        tech: {
+            name: 'Technology & Engineering 💻',
+            gradientStart: '#0056b3',
+            gradientEnd: '#00d2ff'
+        },
+        health: {
+            name: 'Health & Human Services 🤝',
+            gradientStart: '#c41e3a',
+            gradientEnd: '#ff6b6b'
+        },
+        arts: {
+            name: 'Creative Arts & Humanities 🎨',
+            gradientStart: '#2d5016',
+            gradientEnd: '#6fa876'
+        }
+    };
+
     // --- DOM ELEMENTS ---
     const authContainer = document.getElementById('auth-container');
     const appContainer = document.getElementById('app-container');
@@ -305,17 +324,20 @@ document.getElementById('history-list').addEventListener('click', async (e) => {
     });
 
     // --- PURE CANVAS GENERATOR ---
-    function createCardDataUrl(pathwayName) {
+    function createCardDataUrl(pathwayKey) {
+        // Get the color config for this pathway
+        const colorConfig = pathwayColors[pathwayKey];
+
         // Create a canvas element directly in memory (doesn't need to be in the HTML)
         const canvas = document.createElement('canvas');
         canvas.width = 600;
         canvas.height = 400;
         const ctx = canvas.getContext('2d');
 
-        // Draw Background
+        // Draw Background with pathway-specific colors
         const gradient = ctx.createLinearGradient(0, 0, 600, 400);
-        gradient.addColorStop(0, '#0056b3');
-        gradient.addColorStop(1, '#00d2ff');
+        gradient.addColorStop(0, colorConfig.gradientStart);
+        gradient.addColorStop(1, colorConfig.gradientEnd);
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -330,7 +352,7 @@ document.getElementById('history-list').addEventListener('click', async (e) => {
         ctx.font = 'bold 24px sans-serif';
         ctx.fillText('My Recommended High School Pathway is:', canvas.width / 2, 150);
         ctx.font = 'bold 40px sans-serif';
-        ctx.fillText(pathwayName, canvas.width / 2, 220);
+        ctx.fillText(colorConfig.name, canvas.width / 2, 220);
         ctx.font = '20px sans-serif';
         ctx.fillText('Discover your path at Pathway Predictor!', canvas.width / 2, 350);
 
@@ -339,7 +361,7 @@ document.getElementById('history-list').addEventListener('click', async (e) => {
     }
 
     // --- SETUP SHARING LISTENERS ---
-    function setupSharing(pathwayName, imageDataUrl) {
+    function setupSharing(pathwayKey, imageDataUrl, pathwayName) {
         // We will use your GitHub Pages URL here once deployed. 
         // For now, we use a placeholder or window.location.href.
         const appUrl = encodeURIComponent(window.location.href);
@@ -377,8 +399,8 @@ document.getElementById('history-list').addEventListener('click', async (e) => {
             } catch (err) {
                 console.error('Failed to copy text: ', err);
             }
-        };
-    }
+            };
+        }
 
     // --- PATHWAY PREDICTOR LOGIC ---
     document.getElementById('predict-btn').addEventListener('click', async () => {
@@ -400,23 +422,21 @@ document.getElementById('history-list').addEventListener('click', async (e) => {
             }
         }
 
-        const pathwaysMap = {
-            'tech': 'Technology & Engineering 💻',
-            'health': 'Health & Human Services 🤝',
-            'arts': 'Creative Arts & Humanities 🎨'
-        };
+        // Get the display name from the pathway colors config
+        const pathwayConfig = pathwayColors[winningPathway];
+        const pathwayDisplayName = pathwayConfig.name;
 
         const resultText = document.getElementById('result-text');
         const resultContainer = document.getElementById('result-container');
 
-        resultText.textContent = pathwaysMap[winningPathway];
+        resultText.textContent = pathwayDisplayName;
 
-        // Generate the image and get the data URL back
-        const generatedImageUrl = createCardDataUrl(pathwaysMap[winningPathway]);
+        // Generate the image with the correct pathway color and pass the pathway key
+        const generatedImageUrl = createCardDataUrl(winningPathway);
         document.getElementById('share-image').src = generatedImageUrl;
 
-        // Wire up the buttons with the new data
-        setupSharing(pathwaysMap[winningPathway], generatedImageUrl);
+        // Wire up the buttons with the new data, passing both the key and display name
+        setupSharing(winningPathway, generatedImageUrl, pathwayDisplayName);
 
         resultContainer.classList.remove('hidden');
 
